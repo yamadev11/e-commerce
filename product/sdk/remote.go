@@ -46,7 +46,6 @@ func (svc *Product) List(ctx context.Context) (*spec.ListResponse, error) {
 		return nil, err
 	}
 
-	fmt.Printf("%v", response)
 	return response, nil
 }
 
