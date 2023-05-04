@@ -22,7 +22,7 @@ func AddHandlers(router *mux.Router, userEPs spec.Endpoints, logger log.Logger) 
 		JSONEncodeAPIResponse,
 	))
 
-	router.Methods(http.MethodPut).Path(spec.UpdateQuantityPath).Handler(kitHttp.NewServer(
+	router.Methods(http.MethodPatch).Path(spec.UpdateQuantityPath).Handler(kitHttp.NewServer(
 		userEPs.UpdateQuantityEP,
 		decodeUpdateRequest,
 		JSONEncodeAPIResponse,
@@ -54,6 +54,7 @@ func decodeUpdateRequest(ctx context.Context, r *http.Request) (interface{}, err
 	decoder := json.NewDecoder(r.Body)
 	err = decoder.Decode(&updateRequest)
 	if err != nil {
+		err = errors.Wrapf(err, "Message=Failed to decode request body")
 		return nil, err
 	}
 
@@ -66,7 +67,7 @@ func getProductID(r *http.Request) (int, error) {
 	productIDStr, exists := vars["ID"]
 	if !exists {
 		err := errors.New("key not found")
-		err = errors.Wrapf(err, "msg=Failed to get value for key productID")
+		err = errors.Wrapf(err, "Message=Failed to get value for key productID")
 		return -1, err
 	}
 

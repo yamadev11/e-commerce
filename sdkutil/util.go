@@ -8,7 +8,6 @@ import (
 )
 
 type BaseSDK struct {
-	BaseURL    string
 	HTTPClient *http.Client
 }
 
