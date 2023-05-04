@@ -12,7 +12,7 @@ import (
 	"github.com/yamadev11/e-commerce/sdkutil"
 )
 
-type ProductService interface{
+type ProductService interface {
 	List(ctx context.Context) (*spec.ListResponse, error)
 	UpdateQuantity(ctx context.Context, productID, quantity int) error
 }
@@ -31,8 +31,9 @@ func NewProduct() ProductService {
 	}
 }
 
-func (svc *Product) List(ctx context.Context) (*spec.ListResponse, error){
-	
+// List returns the list of products.
+func (svc *Product) List(ctx context.Context) (*spec.ListResponse, error) {
+
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:8080/products", nil)
 	if err != nil {
 		return nil, err
@@ -49,19 +50,20 @@ func (svc *Product) List(ctx context.Context) (*spec.ListResponse, error){
 	return response, nil
 }
 
+// UpdateQuantity updates the quantity of the given product.
 func (svc *Product) UpdateQuantity(ctx context.Context, productID, quantity int) error {
 
 	payload := map[string]interface{}{
 		"quantity": quantity,
 	}
-	
+
 	payloadJSON, err := json.Marshal(payload)
 	if err != nil {
 		return err
 	}
-	
-	req, err := http.NewRequest(http.MethodPatch, 
-		fmt.Sprintf("http://localhost:8080/products/%d/quantity", productID), 
+
+	req, err := http.NewRequest(http.MethodPatch,
+		fmt.Sprintf("http://localhost:8080/products/%d/quantity", productID),
 		bytes.NewBuffer(payloadJSON))
 	if err != nil {
 		return err

@@ -14,16 +14,16 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func AddHandlers(router *mux.Router, userEPs spec.Endpoints, logger log.Logger) error {
+func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) error {
 
 	router.Methods(http.MethodGet).Path(spec.ListPath).Handler(kitHttp.NewServer(
-		userEPs.ListEP,
+		eps.ListEP,
 		decodeListRequest,
 		JSONEncodeAPIResponse,
 	))
 
 	router.Methods(http.MethodPatch).Path(spec.UpdateQuantityPath).Handler(kitHttp.NewServer(
-		userEPs.UpdateQuantityEP,
+		eps.UpdateQuantityEP,
 		decodeUpdateRequest,
 		JSONEncodeAPIResponse,
 	))

@@ -2,7 +2,6 @@ package product
 
 import (
 	"context"
-	"errors"
 
 	"github.com/go-kit/log"
 	"github.com/yamadev11/e-commerce/product/spec"
@@ -20,6 +19,7 @@ func NewBL(logger log.Logger) *BL {
 	}
 }
 
+// List returns the list of products.
 func (bl *BL) List(ctx context.Context) (*spec.ListResponse, error) {
 
 	response := &spec.ListResponse{}
@@ -31,16 +31,8 @@ func (bl *BL) List(ctx context.Context) (*spec.ListResponse, error) {
 	return response, nil
 }
 
+// UpdateQuantity updates the quantity of the given product.
 func (bl *BL) UpdateQuantity(ctx context.Context, productID, quantity int) (err error) {
-
-	// executes when user is placing order i.e for negative quantity
-	if quantity < 0 {
-		if quantity < -10 || quantity < -products[productID].AvlQuantity {
-			err = errors.New("quantity is beyond limit")
-			_ = bl.logger.Log("Method", "UpdateQuantity", "Error", err.Error())
-			return
-		}
-	}
 
 	err = bl.dl.UpdateQuantity(ctx, productID, quantity)
 	if err != nil {

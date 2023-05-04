@@ -1,5 +1,6 @@
 package spec
 
+// Product is the struct for product details
 type Product struct {
 	ID          int     `json:"id"`
 	Name        string  `json:"name"`
