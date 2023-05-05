@@ -1,4 +1,4 @@
-package main
+package testutil
 
 import (
 	"fmt"
@@ -8,8 +8,7 @@ import (
 
 	"github.com/go-kit/log"
 	"github.com/gorilla/mux"
-	"github.com/yamadev11/e-commerce/order"
-	"github.com/yamadev11/e-commerce/product/sdk"
+	"github.com/yamadev11/e-commerce/product"
 )
 
 func defaultTimestampUTC() log.Valuer {
@@ -18,18 +17,20 @@ func defaultTimestampUTC() log.Valuer {
 	}
 }
 
-const OrderServicePort int = 8090
+var (
+	TestProductPort int = 8081
+)
 
-func main() {
+func InitTestInfra() {
 	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout))
 	logger = log.With(logger, "TS", defaultTimestampUTC())
-	logger = log.With(logger, "Service", "OrderService")
+	logger = log.With(logger, "Service", "ProductService")
 	logger = log.With(logger, "Caller", log.DefaultCaller)
 	router := mux.NewRouter()
+	product.NewProductService(logger, router)
 
-	product := sdk.NewProduct(8080)
-	order.NewOrderService(logger, router, product)
-
-	_ = logger.Log("Msg", "Starting Order Service")
-	_ = http.ListenAndServe(fmt.Sprintf(":%d", OrderServicePort), router)
+	_ = logger.Log("Msg", "Starting Product Service")
+	go func() {
+		_ = http.ListenAndServe(fmt.Sprintf(":%d", TestProductPort), router)
+	}()
 }

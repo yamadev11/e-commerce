@@ -18,11 +18,13 @@ type ProductService interface {
 }
 
 type Product struct {
+	Port int
 	sdkutil.BaseSDK
 }
 
-func NewProduct() ProductService {
+func NewProduct(port int) ProductService {
 	return &Product{
+		Port: port,
 		BaseSDK: sdkutil.BaseSDK{
 			HTTPClient: &http.Client{
 				Timeout: time.Minute,
@@ -34,7 +36,9 @@ func NewProduct() ProductService {
 // List returns the list of products.
 func (svc *Product) List(ctx context.Context) (*spec.ListResponse, error) {
 
-	req, err := http.NewRequest(http.MethodGet, "http://localhost:8080/products", nil)
+	req, err := http.NewRequest(http.MethodGet,
+		fmt.Sprintf("http://localhost:%d/products", svc.Port),
+		nil)
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +66,7 @@ func (svc *Product) UpdateQuantity(ctx context.Context, productID, quantity int)
 	}
 
 	req, err := http.NewRequest(http.MethodPatch,
-		fmt.Sprintf("http://localhost:8080/products/%d/quantity", productID),
+		fmt.Sprintf("http://localhost:%d/products/%d/quantity", svc.Port, productID),
 		bytes.NewBuffer(payloadJSON))
 	if err != nil {
 		return err

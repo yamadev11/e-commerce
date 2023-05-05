@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -16,6 +17,8 @@ func defaultTimestampUTC() log.Valuer {
 	}
 }
 
+const ProductServicePort int = 8080
+
 func main() {
 	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stdout))
 	logger = log.With(logger, "TS", defaultTimestampUTC())
@@ -25,5 +28,5 @@ func main() {
 	product.NewProductService(logger, router)
 
 	_ = logger.Log("Msg", "Starting Product Service")
-	_ = http.ListenAndServe(":8080", router)
+	_ = http.ListenAndServe(fmt.Sprintf(":%d", ProductServicePort), router)
 }

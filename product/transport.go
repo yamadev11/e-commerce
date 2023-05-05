@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) error {
+func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) {
 
 	router.Methods(http.MethodGet).Path(spec.ListPath).Handler(kitHttp.NewServer(
 		eps.ListEP,
@@ -27,8 +27,6 @@ func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) erro
 		decodeUpdateRequest,
 		JSONEncodeAPIResponse,
 	))
-
-	return nil
 }
 
 func JSONEncodeAPIResponse(ctx context.Context, w http.ResponseWriter, resp interface{}) error {

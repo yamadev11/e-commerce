@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"sort"
 
 	"github.com/go-kit/log"
 	"github.com/yamadev11/e-commerce/product/spec"
@@ -28,6 +29,8 @@ func (bl *BL) List(ctx context.Context) (*spec.ListResponse, error) {
 		response.Products = append(response.Products, product)
 	}
 
+	// sorting list in ascending order
+	sort.Sort(ProductList(response.Products))
 	return response, nil
 }
 
