@@ -93,6 +93,12 @@ func (bl *BL) Create(ctx context.Context, items []spec.Item) (*spec.Order, error
 
 	itemMap := map[int]int{}
 	for _, item := range items {
+		if item.Quantity <= 0 {
+			err = errors.New("Quantity can not be zero or negative")
+			_ = bl.logger.Log("Method", "Create", "Error", err.Error())
+			return nil, err
+		}
+
 		itemMap[item.ID] = itemMap[item.ID] + item.Quantity
 		product, ok := productMap[item.ID]
 		if !ok {
@@ -108,6 +114,7 @@ func (bl *BL) Create(ctx context.Context, items []spec.Item) (*spec.Order, error
 			_ = bl.logger.Log("Method", "Create", "Error", err.Error())
 			return nil, err
 		}
+
 	}
 
 	var amount, discount float64
