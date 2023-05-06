@@ -14,7 +14,7 @@ import (
 	"github.com/gorilla/mux"
 )
 
-func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) error {
+func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) {
 
 	router.Methods(http.MethodGet).Path(spec.GetPath).Handler(kitHttp.NewServer(
 		eps.GetEP,
@@ -34,7 +34,6 @@ func AddHandlers(router *mux.Router, eps spec.Endpoints, logger log.Logger) erro
 		JSONEncodeAPIResponse,
 	))
 
-	return nil
 }
 
 func JSONEncodeAPIResponse(ctx context.Context, w http.ResponseWriter, resp interface{}) error {

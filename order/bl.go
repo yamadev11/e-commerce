@@ -160,7 +160,7 @@ func (bl *BL) Update(ctx context.Context, orderID, status int) error {
 		return err
 	}
 
-	if order.Status > status || (order.Status == Completed && status == Cancelled) {
+	if status > Cancelled || status < order.Status || (order.Status == Completed && status == Cancelled) {
 		err := errors.New("Invalid order status, couldn't update order status")
 		_ = bl.logger.Log("Method", "Update", "Error", err.Error())
 		return err
