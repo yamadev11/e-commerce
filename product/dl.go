@@ -24,7 +24,7 @@ func (dl *DL) UpdateQuantity(ctx context.Context, productID, quantity int) error
 		return errors.New("invalid productID, couldn't update product quantity")
 	}
 
-	product.AvlQuantity = product.AvlQuantity + quantity
+	product.AvlQuantity = quantity
 	products[productID] = product
 	return nil
 }

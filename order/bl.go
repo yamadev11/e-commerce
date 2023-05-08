@@ -121,13 +121,14 @@ func (bl *BL) Create(ctx context.Context, items []spec.Item) (*spec.Order, error
 	var premiumProductCount int
 	for productID, quantity := range itemMap {
 		// update product quantity
-		err = bl.product.UpdateQuantity(ctx, productID, -quantity)
+		product := productMap[productID]
+		product.AvlQuantity -= quantity
+		err = bl.product.UpdateQuantity(ctx, productID, product.AvlQuantity)
 		if err != nil {
 			_ = bl.logger.Log("Method", "Create", "Error", err.Error())
 			return nil, err
 		}
 
-		product := productMap[productID]
 		amount += float64(quantity) * product.Price
 		if product.Category == "Premium" {
 			premiumProductCount++

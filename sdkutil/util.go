@@ -20,9 +20,13 @@ func (baseSDK *BaseSDK) SendRequest(req *http.Request, v interface{}) error {
 		return err
 	}
 
+	if res == nil {
+		return errors.New("no response found")
+	}
+
 	defer res.Body.Close()
 
-	if res.StatusCode < http.StatusOK || res.StatusCode >= http.StatusBadRequest {
+	if res.StatusCode != http.StatusOK {
 		var errMsg string
 		if err = json.NewDecoder(res.Body).Decode(&errMsg); err == nil {
 			return errors.New(errMsg)

@@ -2,6 +2,7 @@ package product
 
 import (
 	"context"
+	"errors"
 	"sort"
 
 	"github.com/go-kit/log"
@@ -36,6 +37,10 @@ func (bl *BL) List(ctx context.Context) (*spec.ListResponse, error) {
 
 // UpdateQuantity updates the quantity of the given product.
 func (bl *BL) UpdateQuantity(ctx context.Context, productID, quantity int) (err error) {
+
+	if quantity < 0 {
+		return errors.New("Invalid quantity!!!")
+	}
 
 	err = bl.dl.UpdateQuantity(ctx, productID, quantity)
 	if err != nil {
